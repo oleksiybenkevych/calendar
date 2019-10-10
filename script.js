@@ -114,7 +114,6 @@ class Calendar {
 
   render() {
     this.init();
-
     this.renderHeader();
     this.renderBody();
   }
