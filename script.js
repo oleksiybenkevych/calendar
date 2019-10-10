@@ -19,16 +19,18 @@ class Calendar {
     this.selectYear = document.getElementById("year");
     this.selectMonth = document.getElementById("month");
     this.selectType = document.getElementById("type");
+    this.init();
+    this.tmpFirstDay;
+    this.tmpWeek;
+  }
+  init() {
     this.currentYear = parseInt(this.selectYear.value);
     this.currentMonth = parseInt(this.selectMonth.value);
     this.currentType = parseInt(this.selectType.value);
     this.firstDay = new Date(this.currentYear, this.currentMonth).getDay();
     this.daysInMonth =
       32 - new Date(this.currentYear, this.currentMonth, 32).getDate();
-    this.tmpFirstDay;
-    this.tmpWeek;
   }
-
   renderHeader() {
     const week = document.getElementById("calendar-head");
     week.innerHTML = "";
@@ -111,12 +113,7 @@ class Calendar {
   }
 
   render() {
-    this.currentYear = parseInt(this.selectYear.value);
-    this.currentMonth = parseInt(this.selectMonth.value);
-    this.currentType = parseInt(this.selectType.value);
-    this.firstDay = new Date(this.currentYear, this.currentMonth).getDay();
-    this.daysInMonth =
-      32 - new Date(this.currentYear, this.currentMonth, 32).getDate();
+    this.init();
 
     this.renderHeader();
     this.renderBody();

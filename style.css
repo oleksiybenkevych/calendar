@@ -1,6 +1,13 @@
-.card-header {
+#monthAndYear {
   text-align: center;
 }
 .bg-info {
   color: #a80000;
+}
+html {
+  font-family: Arial, Helvetica, sans-serif;
+}
+#full-calendar-container {
+  text-align: center;
+  width: fit-content;
 }
