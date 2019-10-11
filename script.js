@@ -21,6 +21,7 @@ class Calendar {
     this.init();
     this.tmpFirstDay;
     this.tmpWeek;
+    this.date;
   }
   setMonth(month) {
     this.tmpCurrentMonth = month;
@@ -53,7 +54,6 @@ class Calendar {
     document.getElementById("month").value = this.tmpCurrentMonth;
     this.render();
   }
-  showSelectedDay() {}
 
   init() {
     this.currentYear = this.tmpCurrentYear;
@@ -99,7 +99,7 @@ class Calendar {
   renderBody() {
     let tbl = document.getElementById("calendar-body");
     tbl.innerHTML = "";
-    let date = 1;
+    this.date = 1;
     // creating all cells
     for (let i = 0; i < 6; i++) {
       // creates a table row
@@ -112,14 +112,24 @@ class Calendar {
           cell.appendChild(cellText);
 
           row.appendChild(cell);
-        } else if (date > this.daysInMonth) {
+        } else if (this.date > this.daysInMonth) {
           break;
         } else {
           let cell = document.createElement("td");
-          let cellText = document.createTextNode(date);
+          cell.onclick = function() {
+            let cells = document.getElementsByTagName("td");
+            for (let item of cells) {
+              item.classList.remove("bg-choosen-date");
+            }
+            cell.classList.add("bg-choosen-date");
+            let tmpdate = document.getElementById("date");
+            tmpdate.innerHTML = cellText.textContent;
+          };
+
+          let cellText = document.createTextNode(this.date);
 
           if (
-            date === this.today.getDate() &&
+            this.date === this.today.getDate() &&
             year === this.today.getFullYear() &&
             month === this.today.getMonth()
           ) {
@@ -136,7 +146,7 @@ class Calendar {
           } // color  date
           cell.appendChild(cellText);
           row.appendChild(cell);
-          date++;
+          this.date++;
         }
       }
       tbl.appendChild(row); // appending each row into calendar body.
@@ -171,8 +181,4 @@ function prevMonth() {
 
 function nextMonth() {
   calendar.next();
-}
-
-function showDay() {
-  calendar.showSelectedDay();
 }

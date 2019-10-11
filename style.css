@@ -16,6 +16,17 @@ html {
   display: flex;
   justify-content: space-between;
 }
-body {
+
+.bg-choosen-date {
+  background-color: #d1c000;
+  border-radius: 15px;
+}
+#main-container {
+  width: fit-content;
+}
+td {
+  width: 30px;
+}
+#date {
   width: fit-content;
 }
