@@ -11,7 +11,8 @@
         
 
     <div class="form-inline" >
-        <select  name="month" id="month" >
+            <button onclick="prevMonth()">⬅</button>
+        <select  name="month" id="month" onchange="onMonthChange(this.value)" >
             <option value=0>Jan</option>
             <option value=1>Feb</option>
             <option value=2>Mar</option>
@@ -28,7 +29,7 @@
 
 
         <label for="year"></label>
-        <select  name="year" id="year">
+        <select  name="year" id="year" onchange="onYearChange(this.value)">
         <option value=2000>2000</option>
         <option value=2001>2001</option>
         <option value=2002>2002</option>
@@ -61,17 +62,17 @@
         <option value=2029>2029</option>
         <option value=2030>2030</option>
     </select>
-<select name="type" id="type">
+<select name="type" id="type" onchange="onTypeChange(this.value)">
         <option value=0>US</option>
-        <option value=1>UA</option>
+        <option selected value=1>UA</option>
 </select>
+<button onclick="nextMonth()">⮕</button>
 
-    <button name ="add-button" id="add-button" onclick="add()"> Add </button>
 </div>
 
 
 <div id="full-calendar-container"  > 
-    <h3  id="monthAndYear"></h3>
+    <!-- <h3  id="monthAndYear"></h3> -->
 
         <table id="calendar">
 

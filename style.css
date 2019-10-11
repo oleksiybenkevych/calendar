@@ -11,3 +11,11 @@ html {
   text-align: center;
   width: fit-content;
 }
+.form-inline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+body {
+  width: fit-content;
+}

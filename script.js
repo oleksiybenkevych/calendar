@@ -16,21 +16,54 @@ class Calendar {
     ];
     this.weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     this.today = new Date();
-    this.selectYear = document.getElementById("year");
-    this.selectMonth = document.getElementById("month");
-    this.selectType = document.getElementById("type");
+    this.tmpCurrentYear = parseInt(document.getElementById("year").value);
+    this.tmpCurrentMonth = parseInt(document.getElementById("month").value);
     this.init();
     this.tmpFirstDay;
     this.tmpWeek;
   }
+  setMonth(month) {
+    this.tmpCurrentMonth = month;
+    this.render();
+  }
+  setYear(year) {
+    this.tmpCurrentYear = year;
+    this.render();
+  }
+  setType(type) {
+    this.currentType = type;
+    this.render();
+  }
+  next() {
+    this.tmpCurrentYear =
+      this.currentMonth === 11 ? this.currentYear + 1 : this.currentYear;
+    this.tmpCurrentMonth = (this.currentMonth + 1) % 12;
+
+    document.getElementById("year").value = this.tmpCurrentYear;
+    document.getElementById("month").value = this.tmpCurrentMonth;
+    this.render();
+  }
+
+  previous() {
+    this.tmpCurrentYear =
+      this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear;
+    this.tmpCurrentMonth = this.currentMonth === 0 ? 11 : this.currentMonth - 1;
+
+    document.getElementById("year").value = this.tmpCurrentYear;
+    document.getElementById("month").value = this.tmpCurrentMonth;
+    this.render();
+  }
+  showSelectedDay() {}
+
   init() {
-    this.currentYear = parseInt(this.selectYear.value);
-    this.currentMonth = parseInt(this.selectMonth.value);
-    this.currentType = parseInt(this.selectType.value);
+    this.currentYear = this.tmpCurrentYear;
+    this.currentMonth = this.tmpCurrentMonth;
+    this.currentType = parseInt(document.getElementById("type").value);
     this.firstDay = new Date(this.currentYear, this.currentMonth).getDay();
     this.daysInMonth =
       32 - new Date(this.currentYear, this.currentMonth, 32).getDate();
   }
+
   renderHeader() {
     const week = document.getElementById("calendar-head");
     week.innerHTML = "";
@@ -43,7 +76,6 @@ class Calendar {
     } else {
       this.tmpFirstDay = this.firstDay;
       this.tmpWeek = this.weekDays;
-      //   this.weekDays.splice(7, 0, "Sun");
     }
 
     for (let i = 0; i < 7; i++) {
@@ -67,9 +99,6 @@ class Calendar {
   renderBody() {
     let tbl = document.getElementById("calendar-body");
     tbl.innerHTML = "";
-    monthAndYear.innerHTML =
-      this.months[this.currentMonth] + " " + this.currentYear;
-
     let date = 1;
     // creating all cells
     for (let i = 0; i < 6; i++) {
@@ -81,12 +110,14 @@ class Calendar {
           let cell = document.createElement("td");
           let cellText = document.createTextNode("");
           cell.appendChild(cellText);
+
           row.appendChild(cell);
         } else if (date > this.daysInMonth) {
           break;
         } else {
           let cell = document.createElement("td");
           let cellText = document.createTextNode(date);
+
           if (
             date === this.today.getDate() &&
             year === this.today.getFullYear() &&
@@ -118,8 +149,30 @@ class Calendar {
     this.renderBody();
   }
 }
-const calendar = new Calendar();
 
-function add() {
-  calendar.render();
+const calendar = new Calendar();
+calendar.render();
+
+function onMonthChange(value) {
+  calendar.setMonth(value);
+}
+
+function onYearChange(value) {
+  calendar.setYear(value);
+}
+
+function onTypeChange(value) {
+  calendar.setType(value);
+}
+
+function prevMonth() {
+  calendar.previous();
+}
+
+function nextMonth() {
+  calendar.next();
+}
+
+function showDay() {
+  calendar.showSelectedDay();
 }
