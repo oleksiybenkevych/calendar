@@ -18,7 +18,7 @@ html {
 }
 
 .bg-choosen-date {
-  background-color: #d1c000;
+  background-color: #d1c000 !important;
   border-radius: 15px;
 }
 #main-container {
@@ -27,6 +27,14 @@ html {
 td {
   width: 30px;
 }
+
 #date {
   width: fit-content;
+}
+#calendar-body td {
+  cursor: pointer;
+}
+#calendar-body td:hover {
+  background-color: rgba(134, 134, 134, 0.3);
+  border-radius: 15px;
 }

@@ -18,10 +18,18 @@ class Calendar {
     this.today = new Date();
     this.tmpCurrentYear = parseInt(document.getElementById("year").value);
     this.tmpCurrentMonth = parseInt(document.getElementById("month").value);
-    this.init();
     this.tmpFirstDay;
     this.tmpWeek;
-    this.date;
+    this.init();
+  }
+
+  init() {
+    this.currentYear = this.tmpCurrentYear;
+    this.currentMonth = this.tmpCurrentMonth;
+    this.currentType = parseInt(document.getElementById("type").value);
+    this.firstDay = new Date(this.currentYear, this.currentMonth).getDay();
+    this.daysInMonth =
+      32 - new Date(this.currentYear, this.currentMonth, 32).getDate();
   }
   setMonth(month) {
     this.tmpCurrentMonth = month;
@@ -44,7 +52,6 @@ class Calendar {
     document.getElementById("month").value = this.tmpCurrentMonth;
     this.render();
   }
-
   previous() {
     this.tmpCurrentYear =
       this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear;
@@ -54,16 +61,6 @@ class Calendar {
     document.getElementById("month").value = this.tmpCurrentMonth;
     this.render();
   }
-
-  init() {
-    this.currentYear = this.tmpCurrentYear;
-    this.currentMonth = this.tmpCurrentMonth;
-    this.currentType = parseInt(document.getElementById("type").value);
-    this.firstDay = new Date(this.currentYear, this.currentMonth).getDay();
-    this.daysInMonth =
-      32 - new Date(this.currentYear, this.currentMonth, 32).getDate();
-  }
-
   renderHeader() {
     const week = document.getElementById("calendar-head");
     week.innerHTML = "";
@@ -99,7 +96,7 @@ class Calendar {
   renderBody() {
     let tbl = document.getElementById("calendar-body");
     tbl.innerHTML = "";
-    this.date = 1;
+    let date = 1;
     // creating all cells
     for (let i = 0; i < 6; i++) {
       // creates a table row
@@ -110,31 +107,27 @@ class Calendar {
           let cell = document.createElement("td");
           let cellText = document.createTextNode("");
           cell.appendChild(cellText);
-
           row.appendChild(cell);
-        } else if (this.date > this.daysInMonth) {
+        } else if (date > this.daysInMonth) {
           break;
         } else {
           let cell = document.createElement("td");
+          let cellText = document.createTextNode(date);
+          cell.appendChild(cellText);
+          row.appendChild(cell);
+
           cell.onclick = function() {
+            // onclick add\remove class
             let cells = document.getElementsByTagName("td");
             for (let item of cells) {
               item.classList.remove("bg-choosen-date");
             }
             cell.classList.add("bg-choosen-date");
-            let tmpdate = document.getElementById("date");
-            tmpdate.innerHTML = cellText.textContent;
+            let showdate = document.getElementById("showdate");
+            showdate.innerHTML = cellText.textContent;
           };
 
-          let cellText = document.createTextNode(this.date);
-
-          if (
-            this.date === this.today.getDate() &&
-            year === this.today.getFullYear() &&
-            month === this.today.getMonth()
-          ) {
-            cell.classList.add("bg-info");
-          }
+          //bg-red for holidays
           if (this.currentType === 1) {
             if (j === 5 || j === 6) {
               cell.classList.add("bg-info");
@@ -143,10 +136,9 @@ class Calendar {
             if (j === 0 || j === 6) {
               cell.classList.add("bg-info");
             }
-          } // color  date
-          cell.appendChild(cellText);
-          row.appendChild(cell);
-          this.date++;
+          }
+
+          date++;
         }
       }
       tbl.appendChild(row); // appending each row into calendar body.
