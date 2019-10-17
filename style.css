@@ -16,10 +16,30 @@ html {
   display: flex;
   justify-content: space-between;
 }
-
 .bg-choosen-date {
-  background-color: #d1c000 !important;
-  border-radius: 15px;
+  background-color: #3d8fd3af;
+  border-radius: 15px !important;
+}
+.bg-start-date {
+  background-color: #3d8fd3af;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.bg-end-date {
+  background-color: #3d8fd3af;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.bg-between-date {
+  background-color: #79a6ce6c;
+}
+.bg-unactive-date {
+  color: #ccc;
+  pointer-events: none;
 }
 #main-container {
   width: fit-content;

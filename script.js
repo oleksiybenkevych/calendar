@@ -21,6 +21,10 @@ class Calendar {
     this.tmpFirstDay;
     this.tmpWeek;
     this.init();
+    this.startDay;
+    this.endDay;
+    this.firstClick = true;
+    this.currentCellDate;
   }
 
   init() {
@@ -93,13 +97,58 @@ class Calendar {
     week.appendChild(row);
   }
 
+  dateClick = cell => {
+    let cells = document.getElementsByTagName("td");
+    let showdate = document.getElementById("showdate");
+    if (this.firstClick) {
+      this.startDay = parseInt(cell.textContent);
+      delete this.endDay;
+
+      // showdate.innerHTML = this.startDay;
+
+      //   if (item.textContent < this.startDay) {
+      //     item.classList.add("unactive-date");
+      //   }
+      // }
+      // cell.classList.add("bg-start-date");
+    } else {
+      this.endDay = parseInt(cell.textContent);
+
+      // showdate.innerHTML = this.startDay + " - " + this.endDay;
+      // cell.classList.add("bg-end-date");
+      // for (let item of cells) {
+      //   item.classList.remove("unactive-date");
+      //   if (
+      //     item.textContent > this.startDay &&
+      //     item.textContent < this.endDay
+      //   ) {
+      //     item.classList.add("bg-between-date");
+      //   } else if (
+      //     item.textContent == this.startDay &&
+      //     item.textContent == this.endDay
+      //   ) {
+      //     item.classList.remove("bg-start-date");
+      //     item.classList.remove("bg-end-date");
+      //     item.classList.add("bg-choosen-date");
+      //     // showdate.innerHTML = this.endDay;
+      //   }
+      // }
+    }
+
+    this.firstClick = !this.firstClick;
+    this.render();
+  };
+
   renderBody() {
     let tbl = document.getElementById("calendar-body");
+
     tbl.innerHTML = "";
     let date = 1;
+
     // creating all cells
     for (let i = 0; i < 6; i++) {
       // creates a table row
+
       let row = document.createElement("tr");
       //creating individual cells, filing them up with data.
       for (let j = 0; j < 7; j++) {
@@ -112,20 +161,13 @@ class Calendar {
           break;
         } else {
           let cell = document.createElement("td");
+          let cellMonth = this.tmpCurrentMonth;
           let cellText = document.createTextNode(date);
           cell.appendChild(cellText);
           row.appendChild(cell);
+          this.currentCellDate = parseInt(cell.textContent);
 
-          cell.onclick = function() {
-            // onclick add\remove class
-            let cells = document.getElementsByTagName("td");
-            for (let item of cells) {
-              item.classList.remove("bg-choosen-date");
-            }
-            cell.classList.add("bg-choosen-date");
-            let showdate = document.getElementById("showdate");
-            showdate.innerHTML = cellText.textContent;
-          };
+          cell.onclick = () => this.dateClick(cell);
 
           //bg-red for holidays
           if (this.currentType === 1) {
@@ -141,8 +183,49 @@ class Calendar {
           date++;
         }
       }
+
       tbl.appendChild(row); // appending each row into calendar body.
     }
+
+    let cells = document.getElementsByTagName("td");
+    for (let item of cells) {
+      this.currentCellDate = parseInt(item.textContent);
+      if (this.currentCellDate < this.startDay) {
+        item.classList.add("bg-unactive-date");
+      } else if (this.currentCellDate === this.startDay) {
+        if (
+          this.currentCellDate === this.endDay &&
+          this.currentCellDate === this.startDay
+        ) {
+          item.classList.remove("bg-start-date");
+          item.classList.remove("bg-end-date");
+          item.classList.add("bg-choosen-date");
+          for (let item of cells) {
+            item.classList.remove("bg-unactive-date");
+          }
+        } else {
+          item.classList.add("bg-start-date");
+        }
+        for (let item of cells) {
+          item.classList.remove("bg-end-date");
+          item.classList.remove("bg-between-date");
+        }
+      } else if (this.currentCellDate === this.endDay) {
+        item.classList.add("bg-end-date");
+        for (let item of cells) {
+          item.classList.remove("bg-unactive-date");
+        }
+      } else if (
+        this.currentCellDate > this.startDay &&
+        this.currentCellDate < this.endDay
+      ) {
+        item.classList.add("bg-between-date");
+      }
+    }
+
+    // } else if (date > this.startDay && date < this.endDay) {
+    //   cell.classList.add("bg-between-date");
+    // }
   }
 
   render() {
