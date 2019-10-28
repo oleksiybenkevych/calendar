@@ -7,6 +7,7 @@ class Calendar {
     this.weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     this.showdate = document.getElementById("showdate");
     this.showrange = document.getElementById("showrange");
+    this.father = document.getElementById("input-calendar");
     this.tmpCurrentYear = parseInt(document.getElementById("year").value);
     this.tmpCurrentMonth = parseInt(document.getElementById("month").value);
     this.today = new Date();
@@ -255,9 +256,12 @@ class Calendar {
           this.tmpCurrentYear
         }`
       );
-      document.getElementById("dateInput").value = `${
+      document.getElementById(
+        "dateInput"
+      ).value = ` ${this.startDay.getDate()} ${
         this.months[this.startDay.getMonth()]
-      } ${this.startDay.getDate()}`;
+      } ${this.startDay.getFullYear()}`;
+      this.father.style.visibility = "hidden";
     } else {
       if (this.firstClick) {
         this.startDay = new Date(
@@ -365,7 +369,7 @@ function nextMonth() {
 function onInputClick() {
   // element.innerHTML = document.getElementById("calendar-container").innerHTML;
   // document.getElementById("calendar-container").style.display = "block";
-  let father = document.getElementById("input-calendar");
+  calendar.father.style.visibility = "visible";
   let child = document.getElementById("main-container");
-  father.appendChild(child);
+  calendar.father.appendChild(child);
 }
