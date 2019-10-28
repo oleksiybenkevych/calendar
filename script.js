@@ -19,10 +19,22 @@ class Calendar {
       new Date(2019, 9, 19)
     ];
     this.firstClick = true;
-    this.rangeCalendar = true;
+
+    this.rangeCalendar = false; //true range calendar / false input calendar
     this.init();
+    this.showCalendar();
   }
-  showCalendar() {}
+
+  showCalendar = () => {
+    if (this.rangeCalendar === true) {
+      document.getElementById("input-container").style.display = "none";
+      document.getElementById("calendar-container").style.display = "block";
+    } else {
+      document.getElementById("input-container").style.display = "block";
+      document.getElementById("calendar-container").style.display = "none";
+    }
+  };
+
   init() {
     this.currentYear = this.tmpCurrentYear;
     this.currentMonth = this.tmpCurrentMonth;
@@ -123,106 +135,146 @@ class Calendar {
 
   rangeDays() {
     let cells = document.getElementsByTagName("td");
-    for (let item of cells) {
-      this.currentCellDate = new Date(
-        `${this.tmpCurrentMonth + 1} ${parseInt(item.textContent)} ${
-          this.tmpCurrentYear
-        }`
-      );
-
-      if (this.currentCellDate < this.startDay) {
-        item.classList.add("bg-unactive-date");
-      }
-      if (this.currentCellDate < this.endDay) {
-        item.classList.remove("bg-unactive-date");
-      }
-
-      for (let i = 0; i < this.blockedDays.length; i++) {
+    if (this.rangeCalendar === false) {
+      for (let item of cells) {
+        this.currentCellDate = new Date(
+          `${this.tmpCurrentMonth + 1} ${parseInt(item.textContent)} ${
+            this.tmpCurrentYear
+          }`
+        );
+        for (let i = 0; i < this.blockedDays.length; i++) {
+          if (
+            this.currentCellDate.getDate() === this.blockedDays[i].getDate() &&
+            this.currentCellDate.getMonth() ===
+              this.blockedDays[i].getMonth() &&
+            this.currentCellDate.getFullYear() ===
+              this.blockedDays[i].getFullYear()
+          ) {
+            item.classList.add("bg-unactive-date");
+          }
+        }
         if (
-          this.currentCellDate.getDate() === this.blockedDays[i].getDate() &&
-          this.currentCellDate.getMonth() === this.blockedDays[i].getMonth() &&
-          this.currentCellDate.getFullYear() ===
-            this.blockedDays[i].getFullYear()
+          this.currentCellDate.getDate() === this.startDay.getDate() && //date = startday
+          this.currentCellDate.getMonth() === this.startDay.getMonth() &&
+          this.currentCellDate.getFullYear() === this.startDay.getFullYear()
         ) {
+          item.classList.add("bg-choosen-date");
+        }
+      }
+    } else {
+      for (let item of cells) {
+        this.currentCellDate = new Date(
+          `${this.tmpCurrentMonth + 1} ${parseInt(item.textContent)} ${
+            this.tmpCurrentYear
+          }`
+        );
+
+        if (this.currentCellDate < this.startDay) {
           item.classList.add("bg-unactive-date");
         }
-      }
-
-      if (
-        this.currentCellDate.getDate() === this.startDay.getDate() && //date = startday
-        this.currentCellDate.getMonth() === this.startDay.getMonth() &&
-        this.currentCellDate.getFullYear() === this.startDay.getFullYear()
-      ) {
-        item.classList.add("bg-start-date");
-
-        for (let item of cells) {
-          item.classList.remove("bg-end-date");
-          item.classList.remove("bg-between-date");
+        if (this.currentCellDate < this.endDay) {
+          item.classList.remove("bg-unactive-date");
         }
-      }
 
-      if (
-        this.currentCellDate.getDate() === this.endDay.getDate() &&
-        this.currentCellDate.getMonth() === this.endDay.getMonth() &&
-        this.currentCellDate.getFullYear() === this.endDay.getFullYear()
-      ) {
-        item.classList.add("bg-end-date");
+        for (let i = 0; i < this.blockedDays.length; i++) {
+          if (
+            this.currentCellDate.getDate() === this.blockedDays[i].getDate() &&
+            this.currentCellDate.getMonth() ===
+              this.blockedDays[i].getMonth() &&
+            this.currentCellDate.getFullYear() ===
+              this.blockedDays[i].getFullYear()
+          ) {
+            item.classList.add("bg-unactive-date");
+          }
+        }
 
-        this.showdate.innerText = `${
-          this.months[this.startDay.getMonth()]
-        } ${this.startDay.getDate()} - ${
-          this.months[this.endDay.getMonth()]
-        } ${this.endDay.getDate()}`;
+        if (
+          this.currentCellDate.getDate() === this.startDay.getDate() && //date = startday
+          this.currentCellDate.getMonth() === this.startDay.getMonth() &&
+          this.currentCellDate.getFullYear() === this.startDay.getFullYear()
+        ) {
+          item.classList.add("bg-start-date");
 
-        if (this.startDay.getFullYear() != this.endDay.getFullYear()) {
-          this.showdate.innerText = `${this.startDay.getDate()} ${
-            this.months[this.startDay.getMonth()]
-          } ${this.startDay.getFullYear()} - ${this.endDay.getDate()} ${
-            this.months[this.endDay.getMonth()]
-          } ${this.endDay.getFullYear()}`;
+          for (let item of cells) {
+            item.classList.remove("bg-end-date");
+            item.classList.remove("bg-between-date");
+          }
         }
 
         if (
           this.currentCellDate.getDate() === this.endDay.getDate() &&
           this.currentCellDate.getMonth() === this.endDay.getMonth() &&
-          this.currentCellDate.getFullYear() === this.endDay.getFullYear() &&
-          this.currentCellDate.getDate() === this.startDay.getDate() &&
-          this.currentCellDate.getMonth() === this.startDay.getMonth() && // startday = endday
-          this.currentCellDate.getFullYear() === this.startDay.getFullYear()
+          this.currentCellDate.getFullYear() === this.endDay.getFullYear()
         ) {
-          item.classList.remove("bg-start-date");
-          item.classList.remove("bg-end-date");
-          item.classList.add("bg-choosen-date");
+          item.classList.add("bg-end-date");
+
           this.showdate.innerText = `${
+            this.months[this.startDay.getMonth()]
+          } ${this.startDay.getDate()} - ${
             this.months[this.endDay.getMonth()]
           } ${this.endDay.getDate()}`;
+
+          if (this.startDay.getFullYear() != this.endDay.getFullYear()) {
+            this.showdate.innerText = `${this.startDay.getDate()} ${
+              this.months[this.startDay.getMonth()]
+            } ${this.startDay.getFullYear()} - ${this.endDay.getDate()} ${
+              this.months[this.endDay.getMonth()]
+            } ${this.endDay.getFullYear()}`;
+          }
+
+          if (
+            this.currentCellDate.getDate() === this.endDay.getDate() &&
+            this.currentCellDate.getMonth() === this.endDay.getMonth() &&
+            this.currentCellDate.getFullYear() === this.endDay.getFullYear() &&
+            this.currentCellDate.getDate() === this.startDay.getDate() &&
+            this.currentCellDate.getMonth() === this.startDay.getMonth() && // startday = endday
+            this.currentCellDate.getFullYear() === this.startDay.getFullYear()
+          ) {
+            item.classList.remove("bg-start-date");
+            item.classList.remove("bg-end-date");
+            item.classList.add("bg-choosen-date");
+            this.showdate.innerText = `${
+              this.months[this.endDay.getMonth()]
+            } ${this.endDay.getDate()}`;
+          }
         }
-      }
-      if (
-        this.currentCellDate > this.startDay &&
-        this.currentCellDate < this.endDay
-      ) {
-        item.classList.add("bg-between-date");
+        if (
+          this.currentCellDate > this.startDay &&
+          this.currentCellDate < this.endDay
+        ) {
+          item.classList.add("bg-between-date");
+        }
       }
     }
   }
 
   dateClick = cell => {
-    if (this.firstClick) {
+    if (this.rangeCalendar === false) {
       this.startDay = new Date(
         `${this.tmpCurrentMonth + 1} ${parseInt(cell.textContent)} ${
           this.tmpCurrentYear
         }`
       );
-      this.endDay = new Date(0, 0, 0);
-      this.showdate.innerText = "";
+      document.getElementById("dateInput").value = `${
+        this.months[this.startDay.getMonth()]
+      } ${this.startDay.getDate()}`;
     } else {
-      this.endDay = new Date(
-        `${this.tmpCurrentMonth + 1} ${parseInt(cell.textContent)} ${
-          this.tmpCurrentYear
-        }`
-      );
-      this.rangeContainBlockedDays();
+      if (this.firstClick) {
+        this.startDay = new Date(
+          `${this.tmpCurrentMonth + 1} ${parseInt(cell.textContent)} ${
+            this.tmpCurrentYear
+          }`
+        );
+        this.endDay = new Date(0, 0, 0);
+        this.showdate.innerText = "";
+      } else {
+        this.endDay = new Date(
+          `${this.tmpCurrentMonth + 1} ${parseInt(cell.textContent)} ${
+            this.tmpCurrentYear
+          }`
+        );
+        this.rangeContainBlockedDays();
+      }
     }
 
     this.firstClick = !this.firstClick;
@@ -287,6 +339,9 @@ class Calendar {
 const calendar = new Calendar();
 calendar.render();
 
+// const calendar = new Calendar();
+// calendar.render();
+
 function onMonthChange(value) {
   calendar.setMonth(value);
 }
@@ -308,5 +363,9 @@ function nextMonth() {
 }
 
 function onInputClick() {
-  calendar.showCalendar();
+  // element.innerHTML = document.getElementById("calendar-container").innerHTML;
+  // document.getElementById("calendar-container").style.display = "block";
+  let father = document.getElementById("input-calendar");
+  let child = document.getElementById("main-container");
+  father.appendChild(child);
 }
